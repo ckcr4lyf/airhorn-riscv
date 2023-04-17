@@ -93,7 +93,7 @@ static struct gattc_profile_inst gl_profile_tab[PROFILE_NUM] = {
 
 static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if, esp_ble_gattc_cb_param_t *param)
 {
-    esp_ble_gattc_cb_param_t *p_data = (esp_ble_gattc_cb_param_t *)param;
+    esp_ble_gattc_cb_param_t *p_data = param;
 
     switch (event) {
     case ESP_GATTC_REG_EVT: // Used, when gatt client is initiated
@@ -128,7 +128,6 @@ static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_
             break;
         }
         ESP_LOGI(GATTC_TAG, "discover service complete conn_id %d", param->dis_srvc_cmpl.conn_id);
-        // esp_ble_gattc_search_service(gattc_if, param->cfg_mtu.conn_id, &remote_filter_service_uuid);
         esp_ble_gattc_search_service(gattc_if, param->cfg_mtu.conn_id, &remote_filter_service_uuid);
         break;
     case ESP_GATTC_CFG_MTU_EVT:
@@ -141,17 +140,6 @@ static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_
         ESP_LOGI(GATTC_TAG, "SEARCH RES: conn_id = %x is primary service %d", p_data->search_res.conn_id, p_data->search_res.is_primary);
         ESP_LOGI(GATTC_TAG, "start handle %d end handle %d current handle value %d", p_data->search_res.start_handle, p_data->search_res.end_handle, p_data->search_res.srvc_id.inst_id);
 
-        switch (p_data->search_res.srvc_id.uuid.len) {
-            case ESP_UUID_LEN_16:
-                ESP_LOGI(GATTC_TAG, "IT IS 16. VAL: %#04x", p_data->search_res.srvc_id.uuid.uuid.uuid16);
-                break;
-            case ESP_UUID_LEN_32:
-                ESP_LOGI(GATTC_TAG, "IT IS 32. VAL: %ld", p_data->search_res.srvc_id.uuid.uuid.uuid32);
-                break;
-            case ESP_UUID_LEN_128:
-                ESP_LOGI(GATTC_TAG, "IT IS 128.");
-                break;
-        }
         if (p_data->search_res.srvc_id.uuid.len == ESP_UUID_LEN_128 && p_data->search_res.srvc_id.uuid.uuid.uuid128[13] == 0x90){
             ESP_LOGI(GATTC_TAG, "service found");
             // for (uint8_t i = 0; i < ESP_UUID_LEN_128; i++){
