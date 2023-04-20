@@ -172,12 +172,10 @@ static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_
         }
         ESP_LOGI(GATTC_TAG, "ESP_GATTC_SEARCH_CMPL_EVT");
         if (get_server){
-        // if (true){
             uint16_t count = 0;
             esp_gatt_status_t status = esp_ble_gattc_get_attr_count( gattc_if,
                                                                      p_data->search_cmpl.conn_id,
                                                                      ESP_GATT_DB_CHARACTERISTIC,
-                                                                    //  ESP_GATT_DB_ALL,
                                                                      gl_profile_tab[PROFILE_A_APP_ID].service_start_handle,
                                                                      gl_profile_tab[PROFILE_A_APP_ID].service_end_handle,
                                                                      INVALID_HANDLE,
@@ -209,13 +207,6 @@ static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_
                         if (status != ESP_GATT_OK){
                             ESP_LOGE(GATTC_TAG, "esp_ble_gattc_write_char error");
                         }
-                    }
-
-                    /*  Every service have only one char in our 'ESP_GATTS_DEMO' demo, so we used first 'char_elem_result' */
-                    if (count > 0 && (char_elem_result[0].properties & ESP_GATT_CHAR_PROP_BIT_NOTIFY)){
-                        gl_profile_tab[PROFILE_A_APP_ID].char_handle = char_elem_result[0].char_handle;
-
-                        esp_ble_gattc_register_for_notify (gattc_if, gl_profile_tab[PROFILE_A_APP_ID].remote_bda, char_elem_result[0].char_handle);
                     }
                 }
                 /* free char_elem_result */
