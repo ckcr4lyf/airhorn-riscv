@@ -91,6 +91,16 @@ static struct gattc_profile_inst gl_profile_tab[PROFILE_NUM] = {
     },
 };
 
+bool cmp_uuid128(uint8_t a[], uint8_t b[]){
+    for (uint8_t i = 0; i < 16; i++){
+        if (a[i] != b[i]){
+            return false;
+        }
+    }
+
+    return true;
+}
+
 static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if, esp_ble_gattc_cb_param_t *param)
 {
     esp_ble_gattc_cb_param_t *p_data = param;
@@ -140,11 +150,8 @@ static void gattc_profile_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_
         ESP_LOGI(GATTC_TAG, "SEARCH RES: conn_id = %x is primary service %d", p_data->search_res.conn_id, p_data->search_res.is_primary);
         ESP_LOGI(GATTC_TAG, "start handle %d end handle %d current handle value %d", p_data->search_res.start_handle, p_data->search_res.end_handle, p_data->search_res.srvc_id.inst_id);
 
-        if (p_data->search_res.srvc_id.uuid.len == ESP_UUID_LEN_128 && p_data->search_res.srvc_id.uuid.uuid.uuid128[13] == 0x90){
+        if (p_data->search_res.srvc_id.uuid.len == ESP_UUID_LEN_128 && cmp_uuid128(p_data->search_res.srvc_id.uuid.uuid.uuid128, remote_filter_service_uuid.uuid.uuid128)){
             ESP_LOGI(GATTC_TAG, "service found");
-            // for (uint8_t i = 0; i < ESP_UUID_LEN_128; i++){
-            //     ESP_LOGI(GATTC_TAG, "VAL: %#02x", p_data->search_res.srvc_id.uuid.uuid.uuid128[i]);
-            // }
             gl_profile_tab[PROFILE_A_APP_ID].service_start_handle = p_data->search_res.start_handle;
             gl_profile_tab[PROFILE_A_APP_ID].service_end_handle = p_data->search_res.end_handle;
             get_server = true;
