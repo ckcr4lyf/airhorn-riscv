@@ -1,20 +1,5 @@
-/*
- * SPDX-FileCopyrightText: 2021 Espressif Systems (Shanghai) CO LTD
- *
- * SPDX-License-Identifier: Unlicense OR CC0-1.0
- */
-
-
-
-/****************************************************************************
-*
-* This demo showcases BLE GATT client. It can scan BLE devices and connect to one device.
-* Run the gatt_server demo, the client demo will automatically connect to the gatt_server demo.
-* Client demo will enable gatt_server's notify after connection. The two devices will then exchange
-* data.
-*
-****************************************************************************/
-
+// Heavy inspiration taking from ESP-IDF example
+// Source: https://github.com/espressif/esp-idf/blob/a4afa44435ef4488d018399e1de50ad2ee964be8/examples/bluetooth/bluedroid/ble/gatt_client/main/gattc_demo.c
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
